@@ -8,6 +8,8 @@
  `````````
 Sound is a sensory/perceptual phenomena experienced by humans in response to air pressure variations in a certain *frequency* range.
 */
+s.scope;
+s.freqscope;
 
 /* Frequency
  `````````````
@@ -17,8 +19,13 @@ Period = the duration of one cycle
 */
 ( // Ex.
 	var frequency = #[1,2,4,24];
-	{SinOsc.ar(frequency)}.plot(1);
+	{SinOsc.ar(frequency,0,2)}.plot(1);
 )
+
+{SinOsc.ar(50).dup}.play;
+{SinOsc.ar(200).dup}.play;
+{SinOsc.ar(400).dup}.play;
+{SinOsc.ar(MouseX.kr(30,5000))}.play;
 
 /* The audible frequency range (20-20,000Hz)
  ```````````````````````````````````````````
@@ -42,7 +49,11 @@ fork{
 }
 )
 
-x = {LPF.ar(WhiteNoise.ar, MouseX.kr(20,20000,1)).dup}.play;
+x = {
+	LPF.ar(
+	WhiteNoise.ar,
+	MouseX.kr(20,20000,1)
+).dup}.play;
 x.free;
 
 // Wind?
