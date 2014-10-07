@@ -85,7 +85,14 @@ fork{
  Logarithmic perception of frequency
  ````````````````````````````````````
 */
-(0.1.log.neg + (0.1,0.2..10).log).plot
+~a1 = 55;
+~octaves = 2**(..6);
+~notes = ~a*~octaves;
+
+[ ~notes,
+  ~notes.log2
+].plot
+
 (
 // Linear frequency increase
 // (start to lose perception of pitch difference  at high frequencies)

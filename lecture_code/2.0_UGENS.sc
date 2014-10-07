@@ -20,11 +20,13 @@ s.boot;
 // \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 // UGENS can run at 2 different rates: audio rate (ar), and control rate (kr):
 {
-	[
-	SinOsc.kr(100),
-	SinOsc.ar(100)
-	]
+	[ SinOsc.kr(100), SinOsc.ar(100)]
 }.plot
+
+{
+	var freq = SinOsc.kr(1);
+	SinOsc.ar(100*freq + 200)
+}.play;
 
 // Using control rate UGENs reduces the CPU load
 // (thus "kr UGENS" should be used instead of "ar UGENS" for parameters that need to be changed slowly)
@@ -50,21 +52,21 @@ s.scope;
 
 // this:
 {
-	[
+	Splay.ar([
 		SinOsc.ar(100),
 		SinOsc.ar(200),
 		SinOsc.ar(300),
 		SinOsc.ar(400);
-	]
+	])
 }.play;
 
 // is the same as this:
-{SinOsc.ar([100,200,300,400])}.play; // but this is much shorter to write!
+{Splay.ar( SinOsc.ar([100,200,300,400]) )}.play; // but this is much shorter to write!
 
 
 // Multichannel expansion can be very powerful:
 {
-	var n = 20;
+	var n = 40;
 	var freq = Array.series(n,100,100);
 	var amp = Array.rand(n,0,1);
 	var osc = SinOsc.ar( freq, mul:amp );
@@ -77,7 +79,7 @@ fork{
 	50.do{|i|
 		n = (0..i)+1;
 		x = {Mix(SinOsc.ar(100*n, mul:1/n)).dup}.play(Server.internal);
-		0.4.wait;
+		0.1.wait;
 		x.free;
 	}
 }
@@ -87,12 +89,17 @@ fork{
  The Triangle Oscillator
  ------------------------- */
 {
+	SinOsc.ar(100)!2;
+}.play;
+
+{
 	[LFTri.ar(100), DPW3Tri.ar(100)]
 }.play;
 
 /* -----------------------
  The Sawtooth Oscillator
  ------------------------- */
+
 {
 	[LFSaw.ar(100), Saw.ar(100)]
 }.play;
@@ -101,18 +108,32 @@ fork{
  The Pulse Oscillator
  ------------------------- */
 {
-	LFPulse.ar(100,MouseX.kr(1e-2,1-1e-2)).dup;
+	[
+	LFPulse.ar(500,0,0.1),
+	LFPulse.ar(500,0,0.5),
+	LFPulse.ar(500,0,0.9)
+	]
+}.plot
+
+{
+	LFPulse.ar(100,width:MouseX.kr(0.1,0.9).poll).dup;
 	// See also "Pulse.ar"
 }.play
+
+{
+	var width = SinOsc.kr([0.1,0.5,1,2,4,6],0,0.5,0.5);
+	LFPulse.ar(100, 0, width).mean.dup;
+}.play
+
 
 /* -----------------------
  The Klang Oscillator(s)
  ------------------------- */
 (
-n = 6;
-~freqs = {([-1,1].choose * Scale.major.degrees.choose + 60).midicps}!n;
+	n = 12;
+~freqs = {([-1,1].choose * Scale.dorian.degrees.choose + 60).midicps}!n;
 ~amps = {0.1.rand}!n;
-{
+a = {
 	Klang.ar(`[~freqs,~amps,nil]).dup
 }.play;
 )
@@ -122,15 +143,19 @@ n = 6;
  Buffer playback
  ------------------------- */
 ~filepath = Platform.resourceDir +/+ "sounds/a11wlk01.wav";
+
 ~sndbuf = Buffer.read(s, ~filepath);
 
 // The simple way
+
 (
 x = {
 	arg rate=1;
 	PlayBuf.ar(1, ~sndbuf.bufnum, rate, loop:1).dup
 }.play;
 )
+
+y = {SinOsc.ar(100)}.play;
 
 x.set(\rate, 0.5);
 x.set(\rate, 2);
@@ -141,6 +166,7 @@ x.free;
 
 // Ex 1: linear playback
 // ``````````````````
+{Phasor.ar(100, 1, 0, 100)}.plot;
 (
 x = {
 	arg rate=1;
@@ -171,6 +197,8 @@ x.free;
 
 // Ex 2b: non-linear playback
 // ```````````````````````````
+{Phasor.ar(1,1,0,100) + LFNoise0.ar(100,10)}.plot(2)
+
 (
 x = {
 	arg rate=1, jitter=2;
@@ -180,8 +208,8 @@ x = {
 }.play;
 )
 
-x.set(\rate, 0.5, \jitter, 10);
-x.set(\rate, 2, \jitter, 20);
+x.set(\rate, 1, \jitter, 4);
+x.set(\rate, 1, \jitter, 4);
 x.free;
 
 
@@ -192,7 +220,8 @@ x.free;
 (
 x = {
 	arg freq1=200, freq2=0.25;
-	var lfo = SinOsc.ar(freq2,0,50);
+	var llfo = SinOsc.ar(0.5, mul:freq2);
+	var lfo = SinOsc.ar(llfo,0,50);
 	var osc = SinOsc.ar(freq1 + lfo);
 	osc;
 }.play;
@@ -203,14 +232,14 @@ x.set(\freq1, 200, \freq2, 6);
 x.set(\freq1, 200, \freq2, 14);
 x.set(\freq1, 200, \freq2, 20);
 x.set(\freq1, 200, \freq2, 50);
-x.set(\freq1, 200, \freq2, 500);
+x.set(\freq1, 200, \freq2, 1000);
 
 (
-fork{10.do{
-	x.set(\freq1, 200, \freq2, 50);
-	0.25.wait;
-	x.set(\freq1, 200, \freq2, 500);
-	0.25.wait};
+fork{inf.do{
+	x.set(\freq1, 200, \freq2, 1200);
+	(0.125/4).wait;
+	x.set(\freq1, 200, \freq2, 1300);
+	(0.125/4).wait};
 	x.free;};
 )
 
@@ -224,8 +253,10 @@ fork{10.do{
    ------------------------ */
 (
 {
-	[LFNoise0.ar(100),
-	LFNoise1.ar(100), LFNoise2.ar(100)];
+	[
+		LFNoise0.ar(100),
+		LFNoise1.ar(100),
+		LFNoise2.ar(100)];
 }.plot(0.1)
 )
 
@@ -233,12 +264,12 @@ fork{10.do{
 (
 x = {
 	arg rate=2;
-	var freq = LFNoise0.ar(rate,500,550);
+	var freq = LFNoise0.ar(rate,5000,5010);
 	var amp = LFNoise2.ar(rate,0.25,0.3);
 	SinOsc.ar(freq,0,amp);
 }.play;
 )
-x.set(\rate, 1);
+x.set(\rate, 10);
 x.free;
 
 /* ------------------------
@@ -263,14 +294,16 @@ x.free;
    ------------------------ */
 {Dust.ar(1000)}.plot;
 
+{Decay.ar(Impulse.ar(10),0.1)}.plot(1)
+
 (
 x = {
 	arg rate=2;
-	Dust.ar(rate);
+	Decay.ar(Dust.ar(rate),1) * SinOsc.ar(80);
 }.play;
 )
 
-x.set(\rate, 10);
+x.set(\rate, 100);
 
 // /////////////////////////
 // Envelopes
@@ -291,12 +324,15 @@ x.set(\rate, 10);
 Env.new([0,1,4,3,0.1,2],[0.1,0.3,0.2,0.05,0.1], [\lin, \exp, \sin, \cub, \sqr]).plot
 )
 
+Env.perc(1e-8,0.5,1,2).plot
+
 // Applying an envelop
 (
 {
-	var env_shape = Env.perc(0.01,0.5,0.2);
+	var env_shape = Env.perc(1e-8,3,1,-20);
 	var amp_env = EnvGen.ar(env_shape, doneAction:2);
-	var out = LFSaw.ar(300*[1,1.01]) * amp_env;
+	var freq = EnvGen.ar(Env.new([0,1,0.5,1,0.1,2],[0.1,0.5,0.2,0.5,0.1]))*500 + 50;
+	var out = LFSaw.ar(freq*[1,1.01]) * amp_env;
 	out.dup;
 }.play;
 )
@@ -751,7 +787,7 @@ fork{ 5.do{|i|
 		(1/2).wait;
 		f.(400,4).play;
 	};
-	(1/(2**i)).wait;
+	(0.5/(2**i)).wait;
 }};
 )
 
