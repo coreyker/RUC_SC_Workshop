@@ -82,9 +82,10 @@ fork{
 )
 
 /*
- Exponential perception of frequency
+ Logarithmic perception of frequency
  ````````````````````````````````````
 */
+(0.1.log.neg + (0.1,0.2..10).log).plot
 (
 // Linear frequency increase
 // (start to lose perception of pitch difference  at high frequencies)
