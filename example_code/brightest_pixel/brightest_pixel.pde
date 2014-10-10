@@ -54,15 +54,21 @@ void draw() {
   
   
   image(video, 0, 0);    
-  noStroke();
-  fill(0,100);
-  ellipse(bright_loc.x, bright_loc.y, 25, 25);
+    
+  stroke(0);
+  line(bright_loc.x-5,bright_loc.y,bright_loc.x+5,bright_loc.y);
+  line(bright_loc.x,bright_loc.y-5,bright_loc.x,bright_loc.y+5);
+  
+  //fill(0,100);
+  //ellipse(bright_loc.x, bright_loc.y, 25, 25);
   
   // send OSC (open sound control) message
-  msg = new OscMessage("/brightest_pixel");
-  msg.add( bright_loc.x );  
-  msg.add( bright_loc.y );        
-  oscP5.send(msg, netaddr);      
+  if (frameCount%15 == 0) {
+    msg = new OscMessage("/brightest_pixel");
+    msg.add( bright_loc.x );  
+    msg.add( bright_loc.y );        
+    oscP5.send(msg, netaddr);
+  }    
 }
 
 PVector findBrightestBlobCentroid( PImage img ) {
