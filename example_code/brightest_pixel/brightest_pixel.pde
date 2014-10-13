@@ -16,6 +16,8 @@ int vidy = 720;
 
 PVector bright_loc, last;
 
+color c;
+
 void setup() {
   
   size(vidx, vidy);
@@ -25,9 +27,9 @@ void setup() {
   // set osc send receive ports
   oscP5 = new OscP5(this,12000);
   netaddr = new NetAddress("127.0.0.1",57120);
-  
-  
+    
   video = new Movie(this, "/Users/corey/Downloads/Sunset.mp4"); // !!! CHANGE !!! 
+  
   video.loop();
   video.volume(0);
   
@@ -38,7 +40,8 @@ void draw() {
   
   if( video.available() ) {
     video.read();
-  }
+    //video.jump( frameCount*video.duration()/60 );
+  }  
       
   // find brightest pixel  
   PVector b =  findBrightestBlobCentroid( video );
@@ -50,25 +53,31 @@ void draw() {
   // smoothing
   float alpha = 0.95;
   bright_loc.x = alpha * bright_loc.x + (1-alpha) * b.x;  
-  bright_loc.y = alpha * bright_loc.y + (1-alpha) * b.y;
-  
-  
-  image(video, 0, 0);    
+  bright_loc.y = alpha * bright_loc.y + (1-alpha) * b.y;        
+        
+  // send OSC (open sound control) message
+  if (frameCount%15 == 0) {
     
+    video.loadPixels();
+    c = video.pixels[ int(bright_loc.y * video.width + bright_loc.x) ];
+    
+    msg = new OscMessage("/brightest_pixel");
+    msg.add( bright_loc.x );  
+    msg.add( bright_loc.y );
+    msg.add( hue(c) );
+    msg.add( brightness(c) );
+    msg.add( saturation(c) ); 
+    
+    oscP5.send(msg, netaddr);
+  }    
+  
+  // draw video and cross-hairs
+  image(video, 0, 0);
+  
   stroke(0);
   line(bright_loc.x-5,bright_loc.y,bright_loc.x+5,bright_loc.y);
   line(bright_loc.x,bright_loc.y-5,bright_loc.x,bright_loc.y+5);
-  
-  //fill(0,100);
-  //ellipse(bright_loc.x, bright_loc.y, 25, 25);
-  
-  // send OSC (open sound control) message
-  if (frameCount%15 == 0) {
-    msg = new OscMessage("/brightest_pixel");
-    msg.add( bright_loc.x );  
-    msg.add( bright_loc.y );        
-    oscP5.send(msg, netaddr);
-  }    
+
 }
 
 PVector findBrightestBlobCentroid( PImage img ) {
@@ -111,8 +120,8 @@ PVector findBrightestBlobCentroid( PImage img ) {
   float x=0, y=0;
   for (int k=0; k<K; k++) {
     x += locs[k].x;
-    y += locs[k].y;
-  }
+    y += locs[k].y;    
+  }  
   
-  return new PVector( x/K, y/K );
+  return new PVector( x/K, y/K );  
 }
