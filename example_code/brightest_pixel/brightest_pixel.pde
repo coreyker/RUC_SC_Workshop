@@ -11,8 +11,8 @@ OscMessage msg;
 
 Movie video;
 
-int vidx = 1280;
-int vidy = 720;
+int vidx = 1280/2;
+int vidy = 720/2;
 
 PVector bright_loc, last;
 
@@ -28,7 +28,7 @@ void setup() {
   oscP5 = new OscP5(this,12000);
   netaddr = new NetAddress("127.0.0.1",57120);
     
-  video = new Movie(this, "/Users/corey/Downloads/Sunset.mp4"); // !!! CHANGE !!! 
+  video = new Movie(this, "/Users/corey/Downloads/Sunset2.mp4"); // !!! CHANGE !!! 
   
   video.loop();
   video.volume(0);
@@ -56,7 +56,7 @@ void draw() {
   bright_loc.y = alpha * bright_loc.y + (1-alpha) * b.y;        
         
   // send OSC (open sound control) message
-  if (frameCount%15 == 0) {
+  if (frameCount%10 == 0) {
     
     video.loadPixels();
     c = video.pixels[ int(bright_loc.y * video.width + bright_loc.x) ];
@@ -84,8 +84,8 @@ PVector findBrightestBlobCentroid( PImage img ) {
   
   img.loadPixels();
   
-  int K = 100;
-  int step = 10;
+  int K = 20;
+  int step = 2;
   int pos = 0;
   
   PVector [] locs = new PVector[K];
