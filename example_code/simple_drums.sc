@@ -11,7 +11,7 @@ s.boot;
 	{
 		var amp_env, phase_env, phase, freq, dur;
 
-		freq = 50.rand + 20;
+		freq = 50.rand + 40;
 		dur = 0.25;
 
 		amp_env   = EnvGen.ar(Env.perc(1e-6,dur), doneAction:2);
@@ -36,7 +36,7 @@ s.boot;
 	{
 		var amp_env, cut_freq, dur;
 
-		cut_freq = 2000;
+		cut_freq = 3000;
 		dur = [0.0625, 0.125, 0.25].choose;
 
 		amp_env = EnvGen.ar(Env.perc(1e-6, dur), doneAction:2);
@@ -82,14 +82,14 @@ s.boot;
 	}
 }
 
-~bd_player = ~player.value([1, 1, 0, 0.1, 0.5, 0, 0, 1].mirror2, ~bass);
-~sn_player = ~player.value([1, 0.1, 0.75, 0, 0.175, 0, 1, 0.5].mirror2, ~snare);
-~hh_player = ~player.value([1, 0.1, 0.1, 1, 0.25, 0.1, 0.75, 0.5].mirror2, ~hat);
+~bd_player = ~player.value([1, 1, 0, 0.1, 0.5, 0, 0, 1], ~bass);
+~sn_player = ~player.value([1, 0.1, 0.75, 0, 0.175, 0, 1, 0.5], ~snare);
+~hh_player = ~player.value([1, 0.1, 0.1, 1, 0.25, 0.1, 0.75, 0.5], ~hat);
 
 
 (
 c = TempoClock.new(1);
-
+~times = [1.15,0.85,1.15,0.85]; // add swing
 {
 	inf.do{
 		arg i;
@@ -97,10 +97,14 @@ c = TempoClock.new(1);
 		~sn_player.value(i);
 		~hh_player.value(i);
 
-		1.wait;
+		~times.wrapAt(i).wait;
 	};
 
 }.fork(c);
 )
 
-c.tempo = 6.6;
+c.tempo = 6;
+
+~bd_player = ~player.value([0], ~bass);
+~sn_player = ~player.value([0], ~snare);
+~hh_player = ~player.value([0], ~hat);
