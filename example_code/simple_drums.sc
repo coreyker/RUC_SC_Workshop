@@ -89,7 +89,8 @@ s.boot;
 
 (
 c = TempoClock.new(1);
-~times = [1.15,0.85,1.15,0.85]; // add swing
+~swing = 0.3; // swing amount
+~times = [1 + ~swing, 1 - ~swing, 1 + ~swing, 1 - ~swing]; // add swing
 {
 	inf.do{
 		arg i;
