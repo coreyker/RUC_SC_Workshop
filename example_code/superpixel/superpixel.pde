@@ -1,3 +1,7 @@
+/*
+video: https://vimeo.com/92484004
+*/
+
 import processing.video.*;
 import oscP5.*;
 import netP5.*;
@@ -5,6 +9,7 @@ import netP5.*;
 OscP5 oscP5;
 NetAddress netaddr;
 OscMessage msg;
+OscBundle bundle;
 
 Movie video;
 
@@ -28,28 +33,27 @@ void setup() {
   netaddr = new NetAddress("127.0.0.1",57120);
   
   // load movie
-  /*
-  video = new Movie(this, "/Users/corey/Downloads/aurora.mov");  
-  */
-  video = new Movie(this, "/Users/corey/Downloads/fireworks_silent.mov");
-  
+  video = new Movie(this, "/Users/corey/Downloads/fireworks.mp4");
   video.loop();
+  video.volume(0);
   
   superpixel = createImage(superwidth,superheight,RGB);
 }
 
 void draw() { 
   
-  frameRate(15);
+  //frameRate(15);
   
   background(0); 
   
   image(video, 0, 0);
   
-
+  
   // average superpixels
+  bundle = new OscBundle();    
   for (int i=0; i<nrows; i++) {
     for (int j=0; j<ncols; j++) {
+      msg = new OscMessage("/superpixel");
       
       int y = i*superheight;
       int x = j*superwidth;
@@ -60,15 +64,16 @@ void draw() {
       rect(x,y + vidy,superwidth, superheight);
       
       // send osc message
-      msg = new OscMessage("/superpixel");
+
       msg.add(i*ncols+j);       
       msg.add(hue(ave));  
       msg.add(saturation(ave));      
       msg.add(brightness(ave));
-      oscP5.send(msg, netaddr);      
+  
+      bundle.add(msg);          
     }
   }
-
+  oscP5.send(bundle, netaddr);
 
 }
 
