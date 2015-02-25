@@ -1,20 +1,27 @@
 ## (parentheses):
-### ( "left parenthesis": <kbd>Shift</kbd>+<kbd>8</kbd>
-### ) "right parenthesis": <kbd>Shift</kbd>+<kbd>9</kbd>
+### "left or opening parenthesis:" ( 
+#### <kbd>Shift</kbd>+<kbd>8</kbd>
+### "right or closing parenthesis:" ) 
+#### <kbd>Shift</kbd>+<kbd>9</kbd>
 
 ## [brackets]:
-### [ "left bracket": <kbd>Alt Gr</kbd>+<kbd>8</kbd>
-### ] "right bracket": <kbd>Alt Gr</kbd>+<kbd>9</kbd>
+### "left bracket:" [
+#### <kbd>Alt Gr</kbd>+<kbd>8</kbd>
+### "right bracket:" ]
+#### <kbd>Alt Gr</kbd>+<kbd>9</kbd>
 
 ## {curly braces}:
-### { "left curly bracket": <kbd>Alt Gr</kbd>+<kbd>7</kbd>
-### } "right curly bracket": <kbd>Alt Gr</kbd>+<kbd>0</kbd>
+### "left or opening curly bracket:" {
+#### <kbd>Alt Gr</kbd>+<kbd>7</kbd>
+### "right curly bracket:" } 
+#### <kbd>Alt Gr</kbd>+<kbd>0</kbd>
 
-### "tilde" ~ <kbd>Alt Gr</kbd>+<kbd>^</kbd>+<kbd>Space</kbd>
+### "tilde:" ~ 
+#### <kbd>Alt Gr</kbd>+<kbd>^</kbd>+<kbd>Space</kbd>
 
 ## quotes
-### " double quote: <kbd>Shift</kbd>+<kbd>2</kbd>
-### '  single quote
+#### " double quote: <kbd>Shift</kbd>+<kbd>2</kbd>
+#### '  single quote
 
 ## other important keys
 : colon <br />
