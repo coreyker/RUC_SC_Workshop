@@ -1,5 +1,5 @@
 ## (parentheses):
-( "left parenthesis": <kbd>Shift</kbd>+<kbd>8</kbd> <br />
+### ( "left parenthesis": <kbd>Shift</kbd>+<kbd>8</kbd>
 ) "right parenthesis": <kbd>Shift</kbd>+<kbd>9</kbd> <br />
 
 ## [brackets]:
