@@ -1,17 +1,23 @@
-## (parentheses):
-### ( "left parenthesis": <kbd>Shift</kbd>+<kbd>8</kbd>
-) "right parenthesis": <kbd>Shift</kbd>+<kbd>9</kbd> <br />
+# (parentheses):
+## ( 
+"left parenthesis": <kbd>Shift</kbd>+<kbd>8</kbd> <br />
+## ) "right parenthesis": <kbd>Shift</kbd>+<kbd>9</kbd> <br />
 
-## [brackets]:
-[ "left bracket": <kbd>Alt Gr</kbd>+<kbd>8</kbd> <br />
-] "right bracket": <kbd>Alt Gr</kbd>+<kbd>9</kbd> <br />
+# [brackets]:
+## [ 
+"left bracket": <kbd>Alt Gr</kbd>+<kbd>8</kbd> <br />
+## ] 
+"right bracket": <kbd>Alt Gr</kbd>+<kbd>9</kbd> <br />
 
-## {curly braces}:
-{ "left curly bracket": <kbd>Alt Gr</kbd>+<kbd>7</kbd> <br />
-} "right curly bracket": <kbd>Alt Gr</kbd>+<kbd>0</kbd> <br />
+# {curly braces}:
+# { 
+"left curly bracket": <kbd>Alt Gr</kbd>+<kbd>7</kbd> <br />
+# } 
+"right curly bracket": <kbd>Alt Gr</kbd>+<kbd>0</kbd> <br />
 
-## tilde
-~ tilde: <kbd>Alt Gr</kbd>+<kbd>^</kbd>+<kbd>Space</kbd> <br />
+# tilde
+# ~ 
+tilde: <kbd>Alt Gr</kbd>+<kbd>^</kbd>+<kbd>Space</kbd> <br />
 
 ## quotes
 " double quote: <kbd>Shift</kbd>+<kbd>2</kbd> <br />
