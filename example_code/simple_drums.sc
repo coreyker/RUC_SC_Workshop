@@ -82,8 +82,8 @@ s.boot;
 	}
 }
 
-~bd_player = ~player.value([1, 1, 0, 0.1, 0.5, 0, 0, 1], ~bass);
-~sn_player = ~player.value([1, 0.1, 0.75, 0, 0.175, 0, 1, 0.5], ~snare);
+~bd_player = ~player.value([1, 1, 1, 0.1, 0.5, 1, 1, 1], ~bass);
+~sn_player = ~player.value([1, 0.1, 0.75, 0, 0.175, 0, 1, 0.5].mirror, ~snare);
 ~hh_player = ~player.value([1, 0.1, 0.1, 1, 0.25, 0.1, 0.75, 0.5], ~hat);
 
 
@@ -104,7 +104,7 @@ c = TempoClock.new(1);
 }.fork(c);
 )
 
-c.tempo = 6;
+c.tempo = 5;
 
 ~bd_player = ~player.value([0], ~bass);
 ~sn_player = ~player.value([0], ~snare);

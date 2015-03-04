@@ -92,6 +92,7 @@ Array // highlight (or double-click) on the text and type "cmd-d" (ctl-d on wind
 
 // The SuperCollider language is a powerful object oriented programming language. (Everything is an object, and different objects respond to different messages)
 
+// the lowercase characters [a - z] are reserved "global variables"
 a = 10.5111; // set a new global variable
 
 a.isKindOf(Float); // this variable is a Float(ing) point number
@@ -100,6 +101,10 @@ Float.dumpAllMethods; // lists all messages that a Float will respond to (there 
 
 a.round; // <--- calls the "round" message on a.
 a.floor;
+a.ceil;
+
+// global variables with more descriptive names can be created using the ~ character
+~myGlobalVar = 10.2;
 
 // VARIABLES
 // =========
@@ -115,13 +120,18 @@ stringB = "myVarB is equal to " ++ myVarB ++ ".";
 stringA.postln;
 stringB.postln;
 )
-stringA.postln
+x.value();
+stringA.postln;
 
 // Types of variables
 // ``````````````````
 
 // Floats
-a = 1.1245;
+a = 1.0;
+b = 2;
+
+c = a + b;
+
 a.isFloat;
 
 pi.postln; // built-in float constant
@@ -228,6 +238,7 @@ a = atan(-1); // arctangent
 };
 
 ~f1.value(4)
+squared(4);
 
 // is identical to this:
 ~f2 = {|x|
@@ -242,9 +253,9 @@ a = atan(-1); // arctangent
 (
 // a function with multiple arguments
 ~f3 = {
-	arg x,y,z;
+	arg in1,in2,in3;
 	var sum;
-	sum = x + y + z; /* the last line of a function defines its return value */
+	sum = in1 + in2 + in3; /* the last line of a function defines its return value */
 };
 
 ~f3.value(10,2,3);
@@ -261,10 +272,6 @@ a = atan(-1); // arctangent
 )
 
 
-
-
-
-
 // ARRAYS
 // ======
 a = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
@@ -274,15 +281,15 @@ a[3]; // indexed from 0 to size-1
 a.at(3); // same as above
 
 a[ a.size - 1 ];
-a[ 11 ]; // doesn't exist
+a[ a.size ]; // doesn't exist
 
-a[0] = a[9]; // set the first value to the last value
+a[0] = 100; // set the first value to the last value
 a.plot;
 
 
 // Array shortcuts
 // ````````````````
-a = (..10); // series from 0 to 10
+a = (1..1000); // series from 0 to 10
 a = (3..10); // series from 3 to 10
 
 a = (2,4..10); // series from 2,4..10 (stepping by 2)
@@ -293,16 +300,24 @@ a = 2.dup(5); // same as above
 
 a = 2.dup; // just duplicates once
 
+
 a = (1..10).rotate(2); // rotate array
 a = (1..10).reverse; // reverse array
 
 a = (1..10).mirror;
 a.plot;
 
-a = [1,2,3,4,5,6].choose; // return a random entry from the array
+a = (1..88).choose; // return a random entry from the array
+
+{
+	var freq;
+	freq = TRand.kr(30, 1000, Impulse.kr(2));
+	SinOsc.ar(freq!2, 0, 1).fold(-0.1,0.1);
+}.play;
+s.scope
 
 a = (..100).choose!10
-a = {(..100).choose}.dup(10) // notice the difference?
+a = {(..100).choose}!10 // notice the difference?
 
 // Using the Array class create new arrays
 Array.rand(100,-1.0,1.0).plot; // 100 random values in range (-1,1)
@@ -328,7 +343,7 @@ b = ~f!100; // shortcut for the above
 ~dictionary.postln;
 
 // Getting elements
-~dictionary.at(\b);
+~dictionary.at(\hej);
 ~dictionary[\hej]; // same as previous line
 
 // Setting elements
@@ -367,7 +382,7 @@ x.free
 
 // Draw the circles
 (
-w = Window(\cicles, Rect(100,100,500,500))
+w = Window(\circles, Rect(100,100,500,500))
 .background_(Color.black)
 .drawFunc_({
 	~circleList.do{ |c|
@@ -381,12 +396,13 @@ w = Window(\cicles, Rect(100,100,500,500))
 // CONTROL STRUCTURES
 // ```````````````````
 (
-a = Array.rand(100,-1.0,1.0);
+a = Array.rand(3,-1.0,1.0);
 
 // loop through elements of an array
+a;
 a.do({ arg value, index;
-	//[index, value].postln;
-	[value, value**2].postln;
+	[index, value].postln;
+	//[value, value**2].postln;
 });
 )
 
@@ -395,9 +411,9 @@ a.do({ arg value, index;
 
 // create a new array by modifying another one
 (
-a = Array.series(100,1,1);
+a = Array.series(4,1,2);
 b = a.collect({ arg value, index;
-	-1*value;
+	(-1*value).postln;
 });
 
 [a,b].plot;
@@ -405,7 +421,7 @@ b = a.collect({ arg value, index;
 
 // conditional execution
 (
-
+a = Array.series(100,51,51);
 b = a.collect({ arg value, index;
 	if( index < 50, // condition
 		{-1*value}, // evaluate this function if condition is TRUE
@@ -425,6 +441,23 @@ while({i<5}, {i.postln; i=i+1});
 
 // switch - look-up for yourself (highlight and type ctrl-d)
 
+// //////////////////////
+// FORKING FUNCTIONS
+// \\\\\\\\\\\\\\\\\\\\\\
+10.do{
+	arg i;
+	("Called function " ++ i ++ " times").postln;
+}
+
+// "Play function (language side)"
+{
+	inf.do{
+		arg i;
+		("Called function " ++ i ++ " times").postln;
+		1.wait;
+	}
+}.fork
+
 
 // //////////////////////
 // LET'S MAKE SOME SOUND
@@ -442,12 +475,13 @@ s.boot; // we have to boot the server before we can send it anything
 // We can send a function to the server to be played
 // (the function must return a unit generator)
 
-x = { |freq=400|
+x = {
+	arg freq=400;
 	SinOsc.ar(freq)!2;
 }; // SinOsc is a sinusoidal oscillator. "ar" means "audio rate"
 
 a = x.play;
-a.set(\freq, 100)
+a.set(\freq, 300)
 
 a.free;
 
@@ -458,16 +492,16 @@ a.free;
 
 (
 fork{
-	48.do{ |i|
+	inf.do{ |i|
 		var wait_time = [0.03125, 0.0625, 0.125, 0.25].choose;
 
 		x = {
 			var note, freq, sin, env;
-			note = 50 + i;
+			note = Rand(30,100);
 			freq = note.midicps;
 
 			sin = SinOsc.ar([freq, freq*1.1], mul:0.5);
-			env = XLine.ar(1, 1e-5, t*2, doneAction:2);
+			env = XLine.ar(1, 1e-5, wait_time*2, doneAction:2);
 
 			sin * env;
 		}.play;

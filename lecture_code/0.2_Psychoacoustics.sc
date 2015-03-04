@@ -8,6 +8,9 @@
  `````````
 Sound is a sensory/perceptual phenomena experienced by humans in response to air pressure variations in a certain *frequency* range.
 */
+s.boot;
+s.quit;
+Server.default = s = Server.internal;
 s.scope;
 s.freqscope;
 
@@ -18,12 +21,12 @@ Frequency = # of cycles (repetitions) per second of a periodic waveform (measure
 Period = the duration of one cycle
 */
 ( // Ex.
-	var frequency = #[1,2,4,24];
-	{SinOsc.ar(frequency,0,2)}.plot(1);
+	var frequency = [1,2,4,24];
+	{SinOsc.ar(frequency,0,1)}.plot(1);
 )
 
-{SinOsc.ar(50).dup}.play;
-{SinOsc.ar(200).dup}.play;
+{SinOsc.ar(18000).dup}.play;
+{SinOsc.ar([200, 300, 400, 500, 600, 800])}.play;
 {SinOsc.ar(400).dup}.play;
 {SinOsc.ar(MouseX.kr(30,5000))}.play;
 
@@ -87,7 +90,7 @@ fork{
 */
 ~a1 = 55;
 ~octaves = 2**(..6);
-~notes = ~a*~octaves;
+~notes = ~a1 * ~octaves;
 
 [ ~notes,
   ~notes.log2
