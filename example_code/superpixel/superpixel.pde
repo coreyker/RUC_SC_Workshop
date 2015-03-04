@@ -35,7 +35,7 @@ void setup() {
   netaddr = new NetAddress("127.0.0.1",57120);
   
   // load movie
-  video = new Movie(this, "/Users/julia/Downloads/fireworks.mp4");
+  video = new Movie(this, "/Users/julia/Downloads/fireworks.mp4"); // !!! change !!!
   video.frameRate(fr);
   video.loop();
   video.volume(0);

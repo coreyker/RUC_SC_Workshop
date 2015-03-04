@@ -22,7 +22,7 @@ Please download and install SuperCollider:
 
 	Friday 10.00 - 12.00
 
-#### Tentative Week 2 Schedule (October 9-13, 2015)
+#### Tentative Week 2 Schedule (March 9-13, 2015)
 	Monday 10.00 - 12.00 and 13.00 - 15.00
 
 	Tuesday 10.00 - 12.00 and 13.00 - 15.00
